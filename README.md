@@ -1,4 +1,4 @@
-# 📈 ZKVote
+# 👍🏼 👎🏼 ZKVote
 
 Anonymous voting in Solidity.
 This is a fork of [zk-merkle-tree](https://github.com/TheBojda/zk-merkle-tree) library by [TheBodja](https://github.com/TheBojda/).
@@ -24,7 +24,7 @@ sequenceDiagram
     H-->ZK: can't dox the judge
 ```
 
-## TODOs
+## 📋 TODOs
 
 - rename `score` to `meta` for general purpose usage
 - configure circom output to `contracts/circom` or `contracts/verifiers`
