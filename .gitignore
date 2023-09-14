@@ -9,10 +9,8 @@ typechain-types
 cache
 artifacts
 
-
-
-# Hardhat files
-
+# ZK
+contracts/*.sol-e
 /build/
 /dist/
 /.parcel-cache/

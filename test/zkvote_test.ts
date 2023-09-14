@@ -14,7 +14,7 @@ const FIVE_MINUTES = 60 * 5;
 const SEED = "mimcsponge";
 const TREE_LEVELS = 20;
 
-describe.only("ZKVote Tests", function () {
+describe("ZKVote Tests", function () {
     let zkVote: ZKVote;
 
     const getSigners = async () => {
