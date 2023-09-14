@@ -50,3 +50,5 @@ $ pnpm prepare // optional step, should run on its own after install
 ```bash
 $ pnpm test
 ```
+
+**! Warning! This code is not audited, use it with caution !**
