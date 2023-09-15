@@ -68,7 +68,7 @@ describe("ZKTree Smart contract test", () => {
             "build/Verifier.zkey"
         );
 
-        console.log({ commitment, publicSignals });
+        // console.log({ commitment, publicSignals });
 
         assert.equal(publicSignals[0], commitment.nullifierHash);
         assert.equal(publicSignals[1], commitment.score);

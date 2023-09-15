@@ -22,7 +22,7 @@ contract ZKVote is Ownable, ZKTree {
 
     uint64 private _votingStarted;
     uint64 private _judgeCount;
-    uint64 private _medianScore;
+    uint64 private _totalScore;
     uint64 private _reveals;
 
     mapping(address => bool) private _judges;
@@ -104,12 +104,11 @@ contract ZKVote is Ownable, ZKTree {
             _proof_c
         );
 
-        uint256 reveals;
         unchecked {
-            reveals = ++_reveals;
+            ++_reveals;
         }
 
-        _medianScore = uint64((_medianScore + score) / reveals);
+        _totalScore = _totalScore + uint64(score);
     }
 
     /// @notice             Starts the final phaze
@@ -117,12 +116,12 @@ contract ZKVote is Ownable, ZKTree {
         require(_judgeCount == _reveals, "JP: Not all judges revealed");
         phaze = Phaze.FINALIZED;
 
-        emit VotingEnded(_medianScore);
+        emit VotingEnded(getMedian());
     }
 
     /// @notice             Returns the median score
     function getMedian() onlyPhaze(Phaze.FINALIZED) public view returns (uint256) {
-        return _medianScore;
+        return (_totalScore / _reveals);
     }
 
     /// @notice             Judge helper
