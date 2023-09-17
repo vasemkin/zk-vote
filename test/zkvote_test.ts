@@ -87,11 +87,11 @@ describe("ZKVote Tests", function () {
 
             await zkVote
                 .connect(deployer)
-                .init(ethers.utils.formatBytes32String("my proposal"), [
-                    judge.address,
-                    otherJudge.address,
-                    thirdJudge.address,
-                ]);
+                .init(
+                    ethers.utils.formatBytes32String("my proposal"),
+                    [judge.address, otherJudge.address, thirdJudge.address],
+                    BigNumber.from(FIVE_MINUTES)
+                );
 
             const judgeComm = await generateCommitment(BigNumber.from(8));
             const otherJudgeComm = await generateCommitment(BigNumber.from(10));

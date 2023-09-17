@@ -25,6 +25,8 @@ contract ZKVote is Ownable, ZKTree {
     uint64 private _totalScore;
     uint64 private _reveals;
 
+    uint256 private _duration;
+
     mapping(address => bool) private _judges;
     mapping(address => bytes32) private _scores;
 
@@ -55,7 +57,7 @@ contract ZKVote is Ownable, ZKTree {
     /// @notice             Starts the commit phaze
     /// @param  proposal    Proposal IPFS hash
     /// @param  judges      Array of addresses that are able to set scores
-    function init(bytes32 proposal, address[] calldata judges) public onlyPhaze(Phaze.INITIAL) onlyOwner {
+    function init(bytes32 proposal, address[] calldata judges, uint256 duration) public onlyPhaze(Phaze.INITIAL) onlyOwner {
         _proposal = proposal;
         uint64 judgeCount = uint64(judges.length);
 
@@ -70,6 +72,7 @@ contract ZKVote is Ownable, ZKTree {
 
         _judgeCount = judgeCount;
         _votingStarted = uint64(block.timestamp);
+        _duration = duration;
         phaze = Phaze.COMMIT;
 
         emit VotingStarted(msg.sender);
@@ -85,7 +88,7 @@ contract ZKVote is Ownable, ZKTree {
 
     /// @notice             Starts the reveal phaze
     function startReveal() public {
-        require(block.timestamp > (_votingStarted + 5 * 60 - 1), "JP: Commit phaze timer");
+        require(block.timestamp > (_votingStarted + _duration - 1), "JP: Commit phaze timer");
         phaze = Phaze.REVEAL;
     }
 
