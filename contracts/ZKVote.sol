@@ -47,6 +47,11 @@ contract ZKVote is Ownable, ZKTree {
         _;
     }
 
+    modifier onlyOneVote() {
+        require(_scores[msg.sender] == 0x00, "JP: Only one vote");
+        _;
+    }
+
     /// @notice             Starts the commit phaze
     /// @param  proposal    Proposal IPFS hash
     /// @param  judges      Array of addresses that are able to set scores
@@ -71,8 +76,8 @@ contract ZKVote is Ownable, ZKTree {
     }
 
     /// @notice                 Judge commits a score, effectively storing his vote
-    /// @param  commitment      Zk commitment for a score
-    function commitScore(uint256 commitment) public onlyPhaze(Phaze.COMMIT) onlyJudge {
+    /// @param  commitment      MiMCSponge(nullifier,secret,score)
+    function commitScore(uint256 commitment) public onlyPhaze(Phaze.COMMIT) onlyJudge onlyOneVote {
         bytes32 _commitment = bytes32(commitment);
         _scores[msg.sender] = _commitment;
         _commit(_commitment);
