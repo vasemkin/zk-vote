@@ -1,3 +1,12 @@
+export const phazes: Record<string, string> = {
+	'0': 'Initial',
+	'1': 'Commit',
+	'2': 'Reveal',
+	'3': 'Finalized'
+}
+
+export const fiveMinutes = 5 * 60
+
 /// note: pre-detemined addresses for
 /// 0x9F3Ec714885B53173D4E3165C5Edbf29FAa34Dc8
 /// deployer address with no previous deployments
@@ -223,6 +232,19 @@ export const contracts = {
 				type: 'function'
 			},
 			{
+				inputs: [],
+				name: 'duration',
+				outputs: [
+					{
+						internalType: 'uint256',
+						name: '',
+						type: 'uint256'
+					}
+				],
+				stateMutability: 'view',
+				type: 'function'
+			},
+			{
 				inputs: [
 					{
 						internalType: 'uint256',
@@ -325,7 +347,7 @@ export const contracts = {
 					},
 					{
 						internalType: 'uint256',
-						name: 'duration',
+						name: '_duration',
 						type: 'uint256'
 					}
 				],
@@ -548,6 +570,19 @@ export const contracts = {
 						internalType: 'contract IVerifier',
 						name: '',
 						type: 'address'
+					}
+				],
+				stateMutability: 'view',
+				type: 'function'
+			},
+			{
+				inputs: [],
+				name: 'votingStarted',
+				outputs: [
+					{
+						internalType: 'uint64',
+						name: '',
+						type: 'uint64'
 					}
 				],
 				stateMutability: 'view',

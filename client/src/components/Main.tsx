@@ -1,40 +1,68 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import { Navbar } from './Navbar'
-import { useAccount, useReadContract } from 'wagmi'
-import { contracts } from '../helpers/constants'
-import { Box } from '@chakra-ui/react'
+import {
+	Button,
+	Flex,
+	Grid,
+	Heading,
+	Input,
+	Stack,
+	Text,
+	theme
+} from '@chakra-ui/react'
+import { Info } from './Info'
+import { BigNumber } from 'ethers'
 
-const phazes: Record<string, string> = {
-	'0': 'Initial',
-	'1': 'Commit',
-	'2': 'Reveal',
-	'3': 'Finalized'
-}
+/// todo: resolve commonjs stuff
+/// import { generateCommitment } from '../../../src/zktree'
+
+const mockGenerateCommitment = async (_: BigNumber) => ({
+	commitment: 'epicCommitment!'
+})
 
 export const Main: FC = () => {
-	const account = useAccount()
+	const [scoreToCommit, setScoreToCommit] = useState(BigNumber.from('0'))
+	const [commitment, setCommitment] = useState<string | null>(null)
 
-	const { data: phaze } = useReadContract({
-		abi: contracts.zkVote.abi,
-		address: contracts.zkVote.address as `0x${string}`,
-		functionName: 'phaze'
-	})
+	const handleCommitmentInput = (evt: React.FormEvent<HTMLInputElement>) => {
+		setScoreToCommit(BigNumber.from((evt.target as HTMLInputElement).value))
+	}
 
-	const { data: isJudge } = useReadContract({
-		abi: contracts.zkVote.abi,
-		address: contracts.zkVote.address as `0x${string}`,
-		functionName: 'isJudge',
-		args: [account.address]
-	})
+	const handleCommtimentGeneration = async () => {
+		const commitmentData = await mockGenerateCommitment(scoreToCommit)
+		console.log({ commitmentData })
+		setCommitment(commitmentData.commitment)
+	}
 
 	return (
 		<>
 			<Navbar />
-			<Box py={6} px={10}>
-				<p>Current phaze: {phazes[phaze?.toString() ?? '0']}</p>
-				<p>isJudge: {isJudge?.toString()}</p>
-			</Box>
+
+			<Grid templateColumns="1fr 2fr" py={6} px={10} gap={6}>
+				<Info />
+
+				<Stack bg={theme.colors.gray[50]} py={4} px={6} spacing={2}>
+					<Heading as="h3" fontSize={24}>
+						Actions
+					</Heading>
+
+					<Flex gap={2}>
+						<Input
+							type="number"
+							placeholder="Your score"
+							bg={theme.colors.white}
+							onInput={handleCommitmentInput}
+						/>
+
+						<Button onClick={handleCommtimentGeneration}>
+							Generate
+						</Button>
+					</Flex>
+
+					{commitment && <Text>{commitment}</Text>}
+				</Stack>
+			</Grid>
 		</>
 	)
 }

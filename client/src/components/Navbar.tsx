@@ -1,16 +1,18 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import {
 	Box,
 	Button,
 	Flex,
 	Heading,
 	Stack,
+	Text,
 	theme,
 	useToast
 } from '@chakra-ui/react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { watchAccount } from 'wagmi/actions'
 import { config } from '../wagmi'
+import { formatAddress } from '../helpers/formatting'
 
 export const Navbar: FC = () => {
 	const toastRef = useRef(false)
@@ -52,7 +54,29 @@ export const Navbar: FC = () => {
 					</Heading>
 				</Box>
 
-				<Stack direction="row" spacing={2}>
+				<Stack direction="row" spacing={2} align="center">
+					{account.status === 'connected' && (
+						<Stack
+							direction="row"
+							spacing={2}
+							align="center"
+							bg={theme.colors.white}
+							paddingLeft={2}
+							borderRadius={6}
+						>
+							<Text>Address:</Text>
+							<Box
+								bg={theme.colors.gray[200]}
+								p={2}
+								borderRadius={6}
+							>
+								{formatAddress(
+									account?.addresses?.[0].toString()
+								)}
+							</Box>
+						</Stack>
+					)}
+
 					{account.status === 'connected' && (
 						<Button type="button" onClick={() => disconnect()}>
 							Disconnect
@@ -73,12 +97,6 @@ export const Navbar: FC = () => {
 						))}
 				</Stack>
 			</Flex>
-
-			<Box>
-				addresses: {JSON.stringify(account.addresses)}
-				<br />
-				chainId: {account.chainId}
-			</Box>
 		</Box>
 	)
 }

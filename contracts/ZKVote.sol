@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.17;
 
-import { ZKTree } from "./ZKTree.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import {ZKTree} from "./ZKTree.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { IVerifier } from "./ZKTree.sol";
-import { IHasher } from "./MerkleTreeWithHistory.sol";
+import {IVerifier} from "./ZKTree.sol";
+import {IHasher} from "./MerkleTreeWithHistory.sol";
 
 contract ZKVote is Ownable, ZKTree {
     enum Phaze {
@@ -20,12 +20,12 @@ contract ZKVote is Ownable, ZKTree {
 
     bytes32 private _proposal;
 
-    uint64 private _votingStarted;
+    uint64 public votingStarted;
     uint64 private _judgeCount;
     uint64 private _totalScore;
     uint64 private _reveals;
 
-    uint256 private _duration;
+    uint256 public duration;
 
     mapping(address => bool) private _judges;
     mapping(address => bytes32) private _scores;
@@ -57,22 +57,25 @@ contract ZKVote is Ownable, ZKTree {
     /// @notice             Starts the commit phaze
     /// @param  proposal    Proposal IPFS hash
     /// @param  judges      Array of addresses that are able to set scores
-    function init(bytes32 proposal, address[] calldata judges, uint256 duration) public onlyPhaze(Phaze.INITIAL) onlyOwner {
+    function init(
+        bytes32 proposal,
+        address[] calldata judges,
+        uint256 _duration
+    ) public onlyPhaze(Phaze.INITIAL) onlyOwner {
         _proposal = proposal;
         uint64 judgeCount = uint64(judges.length);
 
-
-        for (uint256 i; i < judgeCount;) {
+        for (uint256 i; i < judgeCount; ) {
             _judges[judges[i]] = true;
 
             unchecked {
                 ++i;
             }
-        } 
+        }
 
         _judgeCount = judgeCount;
-        _votingStarted = uint64(block.timestamp);
-        _duration = duration;
+        votingStarted = uint64(block.timestamp);
+        duration = _duration;
         phaze = Phaze.COMMIT;
 
         emit VotingStarted(msg.sender);
@@ -80,7 +83,9 @@ contract ZKVote is Ownable, ZKTree {
 
     /// @notice                 Judge commits a score, effectively storing his vote
     /// @param  commitment      MiMCSponge(nullifier,secret,score)
-    function commitScore(uint256 commitment) public onlyPhaze(Phaze.COMMIT) onlyJudge onlyOneVote {
+    function commitScore(
+        uint256 commitment
+    ) public onlyPhaze(Phaze.COMMIT) onlyJudge onlyOneVote {
         bytes32 _commitment = bytes32(commitment);
         _scores[msg.sender] = _commitment;
         _commit(_commitment);
@@ -88,7 +93,10 @@ contract ZKVote is Ownable, ZKTree {
 
     /// @notice             Starts the reveal phaze
     function startReveal() public {
-        require(block.timestamp > (_votingStarted + _duration - 1), "JP: Commit phaze timer");
+        require(
+            block.timestamp > (votingStarted + duration - 1),
+            "JP: Commit phaze timer"
+        );
         phaze = Phaze.REVEAL;
     }
 
@@ -100,7 +108,7 @@ contract ZKVote is Ownable, ZKTree {
         uint[2] memory _proof_a,
         uint[2][2] memory _proof_b,
         uint[2] memory _proof_c
-    ) public onlyPhaze(Phaze.REVEAL) {    
+    ) public onlyPhaze(Phaze.REVEAL) {
         require(_scoreInRange(score), "JP: Reveal failed");
 
         _nullify(
@@ -128,7 +136,12 @@ contract ZKVote is Ownable, ZKTree {
     }
 
     /// @notice             Returns the median score
-    function getMedian() onlyPhaze(Phaze.FINALIZED) public view returns (uint256) {
+    function getMedian()
+        public
+        view
+        onlyPhaze(Phaze.FINALIZED)
+        returns (uint256)
+    {
         return (_totalScore / _reveals);
     }
 
@@ -138,8 +151,12 @@ contract ZKVote is Ownable, ZKTree {
     }
 
     /// @notice             Validates if the score is the same as the commited hash
-    function _validScoreHash(uint256 score, uint256 nullifier) private view returns (bool) {
-        return (keccak256(abi.encodePacked(score, nullifier)) == _scores[msg.sender]);
+    function _validScoreHash(
+        uint256 score,
+        uint256 nullifier
+    ) private view returns (bool) {
+        return (keccak256(abi.encodePacked(score, nullifier)) ==
+            _scores[msg.sender]);
     }
 
     /// @notice             Validates if the score is in range
