@@ -10,14 +10,16 @@
       "files": "*.ts",
       "options": {
         "tabWidth": 4,
-        "printWidth": 80
+        "printWidth": 80,
+        "useTabs": true
       }
     },
     {
       "files": "*.js",
       "options": {
         "tabWidth": 4,
-        "printWidth": 80
+        "printWidth": 80,
+        "useTabs": true
       }
     }
   ]
