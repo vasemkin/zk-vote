@@ -29,8 +29,8 @@ async function main() {
 
 	const [
 		judge,
-		otherJudge,
 		judgePrivate,
+		otherJudge,
 		otherJudgePrivate,
 		thirdJudge,
 		thirdJudgePrivate,

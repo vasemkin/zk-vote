@@ -14,7 +14,8 @@
     "prepare": "sh scripts/prepare.sh",
     "build": "parcel build",
     "test": "hardhat test",
-    "node": "hardhat node --verbose"
+    "node": "hardhat node --verbose",
+    "deploy": "hardhat run ./scripts/deploy.ts --network localhost"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",

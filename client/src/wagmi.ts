@@ -1,17 +1,14 @@
 import { http, createConfig } from 'wagmi'
 import { hardhat } from 'wagmi/chains'
-import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
+import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
 	chains: [hardhat],
-	connectors: [
-		injected(),
-		coinbaseWallet({ appName: 'Create Wagmi' }),
-		walletConnect({ projectId: import.meta.env.VITE_WC_PROJECT_ID })
-	],
+	connectors: [injected()],
 	transports: {
 		[hardhat.id]: http()
-	}
+	},
+	storage: null
 })
 
 declare module 'wagmi' {

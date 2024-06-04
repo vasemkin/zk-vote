@@ -93,10 +93,11 @@ contract ZKVote is Ownable, ZKTree {
 
     /// @notice             Starts the reveal phaze
     function startReveal() public {
-        require(
-            block.timestamp > (votingStarted + duration - 1),
-            "JP: Commit phaze timer"
-        );
+        // temporarily disabled
+        // require(
+        //     block.timestamp > (votingStarted + duration - 1),
+        //     "JP: Commit phaze timer"
+        // );
         phaze = Phaze.REVEAL;
     }
 

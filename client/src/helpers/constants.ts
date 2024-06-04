@@ -1,3 +1,5 @@
+export const proofServer = 'http://localhost:3000'
+
 export const phazes: Record<string, string> = {
 	'0': 'Initial',
 	'1': 'Commit',

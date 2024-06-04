@@ -34,9 +34,6 @@ const config: HardhatUserConfig = {
 					balance: "100000000000000000000",
 				},
 			],
-			mining: {
-				auto: true,
-			},
 		},
 	},
 };
