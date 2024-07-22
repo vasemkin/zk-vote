@@ -79,9 +79,6 @@ export function calculateMerkleRootAndPath(
 	const root =
 		layers[levels].length > 0 ? layers[levels][0] : zeros[levels - 1];
 
-	console.log({ elements });
-	console.log({ root });
-
 	let pathElements = [];
 	let pathIndices = [];
 

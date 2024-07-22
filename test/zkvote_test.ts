@@ -125,7 +125,7 @@ describe("ZKVote Tests", function () {
 				judgePrivate,
 				TREE_LEVELS,
 				judgeComm,
-				"build/Verifier.wasm",
+				"build/Verifier_js/Verifier.wasm",
 				"build/Verifier.zkey"
 			);
 
@@ -134,7 +134,7 @@ describe("ZKVote Tests", function () {
 				otherJudgePrivate,
 				TREE_LEVELS,
 				otherJudgeComm,
-				"build/Verifier.wasm",
+				"build/Verifier_js/Verifier.wasm",
 				"build/Verifier.zkey"
 			);
 
@@ -143,7 +143,7 @@ describe("ZKVote Tests", function () {
 				thirdJudgePrivate,
 				TREE_LEVELS,
 				thirdJudgeComm,
-				"build/Verifier.wasm",
+				"build/Verifier_js/Verifier.wasm",
 				"build/Verifier.zkey"
 			);
 
